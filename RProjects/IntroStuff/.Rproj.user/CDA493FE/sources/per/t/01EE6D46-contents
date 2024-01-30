@@ -1,0 +1,190 @@
+#7a One sampled Tests
+
+#One Sample T-Test Notes####
+#small number = small difference and or large variance
+#Large number = large difference and or small variance
+
+#load Packages####
+pacman::p_load(pacman, tidyverse)
+#pacman - loading and unloading packages
+#tidyverse - data import, manipulation & visualiztion
+#had to run "install.packages("pacman")"
+#then ran the code above 
+
+#import Data in R####
+df = read_csv("Data/Gambusia_4_6_Fins.csv")
+#df - data frame
+#hitting tab while using the command above loads the folders in the projects
+#view(df) in console to see the data
+#view(df)
+summary(df)
+#summary to understand how R sees the data
+#ID         Acronym          SpecificLocation       Site              Season            Location        
+#Min.   : 141   Length:603         Length:603         Length:603         Length:603         Length:603        
+#1st Qu.:1620   Class :character   Class :character   Class :character   Class :character   Class :character  
+#Median :4028   Mode  :character   Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+#Mean   :3294                                                                                                 
+#3rd Qu.:4974                                                                                                 
+#Max.   :6137                                                                                                 
+
+#Collected            Imaged             Sex             Ratio4_6     Anal Fin 3 (cm)  Anal Fin 4 (cm)  Anal Fin 5 (cm) 
+#Length:603         Length:603         Mode :logical   Min.   :1.020   Min.   :0.1940   Min.   :0.1840   Min.   :0.1600  
+#Class :character   Class :character   FALSE:603       1st Qu.:1.200   1st Qu.:0.3945   1st Qu.:0.3770   1st Qu.:0.3385  
+#Mode  :character   Mode  :character                   Median :1.270   Median :0.4580   Median :0.4400   Median :0.3980  
+#Mean   :1.281   Mean   :0.4667   Mean   :0.4464   Mean   :0.4017  
+#3rd Qu.:1.320   3rd Qu.:0.5210   3rd Qu.:0.4980   3rd Qu.:0.4500  
+#Max.   :2.300   Max.   :0.8480   Max.   :0.7970   Max.   :0.9620  
+
+#Anal Fin 6 (cm)  Anal Fin 7 (cm)    Intensity       Measurer            Notes          
+#Min.   :0.1440   Min.   :0.1130   Min.   :1.000   Length:603         Length:603        
+#1st Qu.:0.2970   1st Qu.:0.2610   1st Qu.:2.000   Class :character   Class :character  
+#Median :0.3460   Median :0.3040   Median :2.000   Mode  :character   Mode  :character  
+#Mean   :0.3534   Mean   :0.3128   Mean   :1.968                                        
+#3rd Qu.:0.3945   3rd Qu.:0.3530   3rd Qu.:2.000                                        
+#Max.   :0.6440   Max.   :0.5720   Max.   :3.000                                        
+#NA's   :1      
+
+#Data Manipulation in tidyverse ####
+df=df%>%
+  select(Ratio4_6)
+
+#select lets you identify the desired variables
+#select(ID,SpecificLocation) will delete all but those
+#select(-ID,-SpecifcLocation) will ...........
+
+summary(df)
+#Ratio4_6    
+#Min.   :1.020  
+#1st Qu.:1.200  
+#Median :1.270  
+#Mean   :1.281  
+#3rd Qu.:1.320  
+#Max.   :2.300 
+
+attach(df)
+
+#Shapiro-Wilk normality test####
+shapiro.test(Ratio4_6)
+
+#data:  Ratio4_6
+#W = 0.82341, p-value < 2.2e-16
+
+#Not normal, p val is small so null is rejected. 
+#Null - data is normal 
+#Alt - data is not normal
+
+par(mfrow = c(1,2))
+#run code above and then rerun plot codes and then you can compare side by side
+#edits parameters
+#1 row
+# 2 columns 
+#two graphs next to eachother 
+
+
+#Histograms####
+hist(Ratio4_6,
+     col = "lightgreen")
+
+hist(rnorm(n=length(Ratio4_6),
+           mean=mean(Ratio4_6),
+           sd=sd(Ratio4_6)), 
+     col = "lightpink")
+
+#One Sample t-test (parametric)####
+t.test(Ratio4_6, mu=1)
+
+#data:  Ratio4_6
+#t = 49.181, df = 602, p-value < 2.2e-16
+#alternative hypothesis: true mean is not equal to 1 , ratio are different
+#95 percent confidence interval:
+  #1.269424 1.291836
+#sample estimates:
+ # mean of x 
+#1.28063 (larger than expected 1, fish are masculinized)
+#p is small, describe alt
+#measured mean is greater than 1 (xbar)
+#ratio is larger than expected, suggesting that the female Gabusia are masculinized 
+
+#reset the graphing parameter
+par(mfrow = c(1,1))
+
+#boxplot####
+boxplot(Ratio4_6,
+        col="violet")
+#mu = expected value = null hypothesis 
+
+abline(h=1,
+       lwd= 3, 
+       col= "darkred", 
+       lty= "dashed")
+#line shows the data collected shows a higher length than the expected ratio of 1:1
+#lwd = 3 line wight 
+#col is color 
+#lty toggle the type of line, solid, dashed, dotted, etc
+
+# change plot background color
+par(bg = "lavender")
+
+boxplot(Ratio4_6, 
+     ylim = c(0.5,2.5),
+     ylab = "4:6 Anal Fin Ratio",
+     xlab= "Female Fish",
+     main = "Female Gambusia Fin Ratio is greater than expected,
+     suggesting masculinization,
+     (t = 49.181, df = 602, p-value < 2.2e-16)",
+     cex.main = 1.2,
+     col = "#AAC0AF")
+#main adds title
+#cex.main changes the font size of title
+
+abline(h=1,
+       lwd= 3, 
+       col= "red", 
+       lty= "dashed")
+
+# Adding a legend
+legend("bottomright", legend = c("Expected Ratio"),
+       lwd = 3, col = "red")
+#legend = add label name 
+
+# Back to the original plot color
+par(bg = "white")
+
+#Wilcoxon Signed Rank Test (Non Parametric)####
+wilcox.test(Ratio4_6, 
+            mu=1,
+            conf.int = 0.95)
+#Wilcoxon signed rank test with continuity correction
+#data:  Ratio4_6
+#V = 182106, p-value < 2.2e-16
+#alternative hypothesis: true location is not equal to 1
+#95 percent confidence interval:
+  #1.255047 1.274957
+#sample estimates:
+  #(pseudo)median 
+#1.265033 
+#anal fin ratio is greater than expected
+
+#Two-sample Tests####
+#the difference in the two central tendencies (means) relative to variation
+
+WARNING
+
+# CLEAN UP #####
+
+# Clear environment
+rm(list = ls()) 
+
+# Clear plots
+graphics.off()
+
+# Clear packages requires the package pacman to work
+p_unload(all)  # Remove all add-ons
+
+# Clear console
+cat("\014")  # ctrl+L
+
+# Clear mind :)
+
+#the above code is to be used in all R scripts to cleanup!!!
+
