@@ -90,7 +90,17 @@ View(viewtibble)
 #12. Pull any available structural information from the Protein DataBase
 fetch_pdb("SCN4A")
 #None of the provided IDs could be retrieved!
-
+fetch_pdb("1ZMR")
+# pdb_ids auth_asym_id label_asym_id reference_database_accession protein_name     reference_database_n…¹
+#<chr>   <chr>        <chr>         <chr>                        <chr>            <chr>              
+#1 1ZMR    A            A             P0A799                       Phosphoglycerat… UniProt 
+fetch_pdb("2HWG")
+#pdb_ids auth_asym_id label_asym_id reference_database_accession protein_name     reference_database_n…¹
+#<chr>   <chr>        <chr>         <chr>                        <chr>            <chr>             
+#1 2HWG    A            A             P08839                       Phosphoenolpyru… UniProt          
+#2 2HWG    A            A             P08839                       Phosphoenolpyru… UniProt          
+#3 2HWG    B            B             P08839                       Phosphoenolpyru… UniProt          
+#4 2HWG    B            B             P08839                       Phosphoenolpyru… UniProt      
 
 #13. Get information on any available 3D structures for your gene
 fetch_alphafold_prediction(accession_numbers)
