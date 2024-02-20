@@ -37,6 +37,7 @@ amino_acid_sequences
 #Writing the amino acid sequence to a fasta file####
 writeXStringSet(dna_sequences, "Seq1AA.fasta", append=FALSE,
                 compress=FALSE, compression_level=NA, format="fasta")
+
 #4. Read this file into R using the appropriate function ####
 accession_numbers<- read.table("AccNumbers.txt")
 
