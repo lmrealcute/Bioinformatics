@@ -72,19 +72,22 @@ plot(UnkHumgene, main = "Phylogenetic Tree of Unknown Human Gene Sequences")
 
 #4 Tranlating sample 6 into an amino acide sequence and writing it to a fasta file####
 #Get DNA sequence
-seq6 <- readDNAStringSet("Seq6.txt")
+# seq6 <- readDNAStringSet("Seq6.txt")
+# access the sample from your already-read data, intead of re-reading a new data file
+# more programmatic this way
+seq6 <- seq$Homo_sapiens_6
 
 #Translating DNA -> Amino Acid Sequence
-dna_sequences <- readDNAStringSet("Seq6.txt")
+# dna_sequences <- readDNAStringSet("Seq6.txt")
 #view(dna_sequences)
-amino_acid_sequences <- Biostrings::translate(dna_sequences)
+amino_acid_sequences <- Biostrings::translate(seq6)
 #two packages overlapped the same function "translate" so i used "Biostrings::" to specify to use this package in the code above. 
 #print the sequences to make sure it worked#
 amino_acid_sequences
 
 #Writing the amino acid sequence to a fasta file
-#writeXStringSet(amino_acid_sequences, "Seq6AA.fasta", append=FALSE,
-#compress=FALSE, compression_level=NA, format="fasta")
+writeXStringSet(amino_acid_sequences, "Seq6AA.fasta", append=FALSE,
+                compress=FALSE, compression_level=NA, format="fasta")
 
 #5 the gene seems to be a truncated hemoglobin beta chain, the E val is 2e-09. Accession # is KAI2558340
 
